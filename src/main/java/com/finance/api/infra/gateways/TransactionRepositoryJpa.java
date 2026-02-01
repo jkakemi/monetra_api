@@ -2,6 +2,7 @@ package com.finance.api.infra.gateways;
 
 import com.finance.api.application.gateways.TransactionGateway;
 import com.finance.api.domain.transaction.Transaction;
+import com.finance.api.infra.controller.dto.DailyExpenseResponseDTO;
 import com.finance.api.infra.controller.dto.ExpenseAnalysisResponseDTO;
 import com.finance.api.infra.persistence.SpringAccountRepository;
 import com.finance.api.infra.persistence.SpringCategoryRepository;
@@ -10,6 +11,7 @@ import com.finance.api.infra.persistence.TransactionEntity;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +53,16 @@ public class TransactionRepositoryJpa implements TransactionGateway {
     }
 
     @Override
+    public Transaction update(Transaction domain) {
+        TransactionEntity entity = springTransactionRepository.findById(domain.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
+
+        entity.setStatus(domain.getStatus());
+        springTransactionRepository.save(entity);
+        return domain;
+    }
+
+    @Override
     public List<Transaction> listByAccountId(Long accountId) {
         return springTransactionRepository.findByAccountId(accountId)
                 .stream()
@@ -80,5 +92,20 @@ public class TransactionRepositoryJpa implements TransactionGateway {
     @Override
     public List<ExpenseAnalysisResponseDTO> expenseAnalysis(Long userId, int month, int year) {
         return springTransactionRepository.findExpensesByCategory(userId, month, year);
+    }
+
+    @Override
+    public List<DailyExpenseResponseDTO> dailyExpenses(Long userId, int month, int year) {
+        return springTransactionRepository.findDailyExpenses(userId, month, year);
+    }
+
+    @Override
+    public BigDecimal totalExpenses(Long userId, int month, int year) {
+        return springTransactionRepository.sumExpensesByUserAndMonth(userId, month, year);
+    }
+
+    @Override
+    public BigDecimal totalIncome(Long userId, int month, int year) {
+        return springTransactionRepository.sumIncomeByUserAndMonth(userId, month, year);
     }
 }

@@ -1,5 +1,6 @@
 package com.finance.api.infra.persistence;
 
+import com.finance.api.domain.transaction.TransactionStatus;
 import com.finance.api.domain.transaction.TransactionType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,6 +21,9 @@ public class TransactionEntity {
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status = TransactionStatus.PENDING;
 
     private String description;
     private LocalDateTime date;

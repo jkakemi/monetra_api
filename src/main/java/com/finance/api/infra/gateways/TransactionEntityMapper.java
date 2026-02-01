@@ -15,6 +15,7 @@ public class TransactionEntityMapper {
         entity.setExchangeRate(domain.getQuotation());
         entity.setFinalAmount(domain.getFinalAmount());
         entity.setType(domain.getType());
+        entity.setStatus(domain.getStatus());
         entity.setDescription(domain.getDescription());
 
         entity.setDate(domain.getDate());
@@ -39,7 +40,7 @@ public class TransactionEntityMapper {
         transaction.setId(entity.getId());
         transaction.setFinalAmount(entity.getFinalAmount());
         transaction.setQuotation(entity.getExchangeRate());
-
+        transaction.setStatus(entity.getStatus());
         transaction.setDate(entity.getDate());
 
         return transaction;

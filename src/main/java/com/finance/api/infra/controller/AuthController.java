@@ -38,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid UserRequestDTO data) {
+    public ResponseEntity<Void> register(@RequestBody UserRequestDTO data) {
         createUser.execute(data.name(), data.email(), data.password(), data.cpf());
         return ResponseEntity.ok().build();
     }

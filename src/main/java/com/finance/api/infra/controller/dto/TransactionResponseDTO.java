@@ -10,6 +10,7 @@ public record TransactionResponseDTO(
         BigDecimal amount,
         String currency,
         String type,
+        String status,
         String description,
         LocalDate date
 ) {}

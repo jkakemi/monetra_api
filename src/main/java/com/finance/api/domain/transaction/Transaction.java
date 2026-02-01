@@ -13,6 +13,7 @@ public class Transaction {
     private BigDecimal quotation;
     private BigDecimal finalAmount;
     private TransactionType type;
+    private TransactionStatus status;
     private String description;
     private LocalDateTime date;
 
@@ -22,6 +23,7 @@ public class Transaction {
         this.amount = amount;
         this.currency = (currency != null) ? currency.toUpperCase() : "BRL";
         this.type = type;
+        this.status = TransactionStatus.PENDING;
         this.description = description;
         this.quotation = BigDecimal.ONE;
         this.finalAmount = amount;
@@ -52,6 +54,11 @@ public class Transaction {
     public BigDecimal getQuotation() { return quotation; }
     public BigDecimal getFinalAmount() { return finalAmount; }
     public TransactionType getType() { return type; }
+    public TransactionStatus getStatus() { return status; }
+    public void setStatus(TransactionStatus status) { this.status = status; }
     public String getDescription() { return description; }
     public LocalDateTime getDate() { return date; }
+
+    public void approve() { this.status = TransactionStatus.APPROVED; }
+    public void reject() { this.status = TransactionStatus.REJECTED; }
 }

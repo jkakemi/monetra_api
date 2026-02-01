@@ -6,6 +6,9 @@ import com.finance.api.infra.persistence.UserEntity;
 import com.finance.api.infra.persistence.SpringUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class UserRepositoryJpa implements UserGateway {
     private final SpringUserRepository springUserRepository;
@@ -21,6 +24,13 @@ public class UserRepositoryJpa implements UserGateway {
         UserEntity entity = mapper.toEntity(user);
         springUserRepository.save(entity);
         return mapper.toDomain(entity);
+    }
+
+    @Override
+    public List<User> listAll() {
+        return springUserRepository.findAll().stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -52,5 +62,10 @@ public class UserRepositoryJpa implements UserGateway {
     @Override
     public boolean existsByEmail(String email) {
         return springUserRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByCpf(String number) {
+        return springUserRepository.existsByCpf(number);
     }
 }

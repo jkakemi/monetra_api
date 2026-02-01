@@ -1,6 +1,5 @@
 package com.finance.api.infra.gateways;
 
-import com.finance.api.application.gateways.ReportGateway;
 import com.finance.api.domain.transaction.Transaction;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,9 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Component
-public class ExcelReportRepository implements ReportGateway {
+public class ExcelReportRepository {
 
-    @Override
     public byte[] generateExcel(List<Transaction> transactions) {
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {

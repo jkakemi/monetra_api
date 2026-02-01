@@ -1,6 +1,11 @@
 package com.finance.api.infra.controller;
 
 import com.finance.api.application.usecases.report.ExportMonthlyReport;
+import com.finance.api.application.usecases.report.ExportMonthlyReportPdf;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger; // Importante
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportController {
 
     private final ExportMonthlyReport exportMonthlyReport;
+    private final ExportMonthlyReportPdf exportMonthlyReportPdf;
+    private static final Logger log = LoggerFactory.getLogger(ReportController.class);
 
-    public ReportController(ExportMonthlyReport exportMonthlyReport) {
+
+
+    public ReportController(ExportMonthlyReport exportMonthlyReport, ExportMonthlyReportPdf exportMonthlyReportPdf) {
         this.exportMonthlyReport = exportMonthlyReport;
+        this.exportMonthlyReportPdf = exportMonthlyReportPdf;
     }
 
     @GetMapping("/excel")
@@ -32,5 +42,20 @@ public class ReportController {
                 .headers(headers)
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(excelFile);
+    }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> downloadPdf() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        byte[] pdfFile = exportMonthlyReportPdf.execute(email);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=finance_extract.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfFile);
     }
 }

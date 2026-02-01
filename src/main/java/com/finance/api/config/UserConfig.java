@@ -60,4 +60,9 @@ public class UserConfig {
         return new ImportUsersFromExcel(userGateway, passwordEncoder);
     }
 
+    @Bean
+    ListUsers listUsers(UserGateway userGateway) {
+        return new ListUsers(userGateway);
+    }
+
 }

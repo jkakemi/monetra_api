@@ -14,8 +14,8 @@ public class DeleteCategory {
         this.userGateway = userGateway;
     }
 
-    public void execute(String emailOwner, Long categoryId) {
-        User user = userGateway.findByEmail(emailOwner);
+    public void execute(String userEmail, Long categoryId) {
+        User user = userGateway.findByEmail(userEmail);
         Category category = categoryGateway.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 

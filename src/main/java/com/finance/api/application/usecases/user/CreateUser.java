@@ -2,6 +2,8 @@ package com.finance.api.application.usecases.user;
 
 import com.finance.api.application.gateways.PasswordEncoderGateway;
 import com.finance.api.application.gateways.UserGateway;
+import com.finance.api.domain.user.Cpf;
+import com.finance.api.domain.user.Email;
 import com.finance.api.domain.user.User;
 import com.finance.api.domain.user.UserRole;
 import org.slf4j.Logger;
@@ -18,8 +20,14 @@ public class CreateUser {
     }
 
     public User execute(String name, String email, String password, String cpf) {
-        if (userGateway.existsByEmail(email)) {
+        Email emailObj = new Email(email);
+        Cpf cpfObj = new Cpf(cpf);
+
+        if (userGateway.existsByEmail(emailObj.getAddress())) {
             throw new IllegalArgumentException("Email already exists");
+        }
+        if(userGateway.existsByCpf(cpfObj.getNumber())){
+            throw new IllegalArgumentException("Cpf already exists");
         }
 
         if (password == null || password.length() < 6) {
@@ -34,9 +42,9 @@ public class CreateUser {
 
         logger.info("Creating user with name {} and email {} and cpf {}", name, email, cpf);
         User user = new User(
-                cpf,
+                cpfObj.getNumber(),
                 name,
-                email,
+                emailObj.getAddress(),
                 encodedPassword,
                 UserRole.USER
         );

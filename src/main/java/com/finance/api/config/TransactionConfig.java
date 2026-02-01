@@ -11,8 +11,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TransactionConfig {
     @Bean
-    CreateTransaction createTransaction(TransactionGateway transactionGateway, AccountGateway accountGateway, QuoteGateway quoteGateway, CategoryGateway categoryGateway) {
-        return new CreateTransaction(transactionGateway, accountGateway, quoteGateway, categoryGateway);
+    CreateTransaction createTransaction(
+            TransactionGateway transactionGateway,
+            AccountGateway accountGateway,
+            QuoteGateway quoteGateway,
+            CategoryGateway categoryGateway,
+            TransactionEventGateway transactionEventGateway) {
+        return new CreateTransaction(transactionGateway, accountGateway, quoteGateway, categoryGateway, transactionEventGateway);
     }
     @Bean
     ListTransactions listTransactions(TransactionGateway transactionGateway, AccountGateway accountGateway, UserGateway userGateway) {

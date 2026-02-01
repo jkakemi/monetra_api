@@ -35,7 +35,12 @@ public class DeleteTransaction {
 
         BigDecimal reverseValue = transaction.getFinalAmount();
 
-        if (transaction.getType() == TransactionType.RECEITA) {
+        boolean isIncome = transaction.getType() == TransactionType.RECEITA ||
+                (transaction.getType() == TransactionType.TRANSFERENCIA &&
+                        transaction.getDescription() != null &&
+                        transaction.getDescription().startsWith("Received from"));
+
+        if (isIncome) {
             BigDecimal newBalance = account.getBalance().subtract(reverseValue);
             account.setBalance(newBalance);
         }

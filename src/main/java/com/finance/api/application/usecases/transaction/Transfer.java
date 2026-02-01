@@ -44,7 +44,7 @@ public class Transfer {
 
         BigDecimal balance = sourceAccount.getBalance().add(sourceAccount.getCreditLimit());
         if (balance.compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Saldo insuficiente para realizar a transferência/pagamento.");
+            throw new IllegalArgumentException("Insufficient amount to complete the transfer/payment.");
         }
 
         Account targetAccount = accountGateway.findByAccountNumber(targetAccountNumber)

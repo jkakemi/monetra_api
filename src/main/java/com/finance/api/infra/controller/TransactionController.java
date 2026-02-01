@@ -33,10 +33,10 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid TransactionRequestDTO dto) {
+    public ResponseEntity<TransactionResponseDTO> create(@RequestBody @Valid TransactionRequestDTO dto) {
         String currency = (dto.currency() != null) ? dto.currency() : "BRL";
 
-        createTransaction.execute(
+        Transaction transaction = createTransaction.execute(
                 dto.accountId(),
                 dto.categoryId(),
                 dto.amount(),
@@ -46,7 +46,19 @@ public class TransactionController {
                 dto.date()
         );
 
-        return ResponseEntity.ok().build();
+        TransactionResponseDTO response = new TransactionResponseDTO(
+                transaction.getId(),
+                transaction.getAccountId(),
+                transaction.getCategoryId(),
+                transaction.getAmount(),
+                transaction.getCurrency(),
+                transaction.getType().toString(),
+                transaction.getStatus().toString(),
+                transaction.getDescription(),
+                transaction.getDate().toLocalDate()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
@@ -63,6 +75,7 @@ public class TransactionController {
                         t.getAmount(),
                         t.getCurrency(),
                         t.getType().toString(),
+                        t.getStatus() != null ? t.getStatus().toString() : "PENDING",
                         t.getDescription(),
                         t.getDate().toLocalDate()
                 ))
